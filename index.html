@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athenaeum — College Library Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --bg2: #ffffff;
+  --bg3: #eef2f8;
+  --text: #0f1923;
+  --text2: #4a5568;
+  --text3: #8a95a3;
+  --accent: #1a4fa0;
+  --accent2: #2563eb;
+  --accent-light: #dbeafe;
+  --gold: #c9922a;
+  --gold-light: #fef3c7;
+  --border: rgba(0,0,0,0.09);
+  --border2: rgba(0,0,0,0.15);
+  --card: #ffffff;
+  --nav-bg: rgba(248,246,241,0.92);
+  --shadow: 0 2px 20px rgba(26,79,160,0.08);
+  --shadow2: 0 8px 40px rgba(26,79,160,0.12);
+  --radius: 12px;
+  --radius2: 20px;
+  --danger: #dc2626;
+  --success: #059669;
+  --warning: #d97706;
+}
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2333;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #484f58;
+  --accent: #58a6ff;
+  --accent2: #79b8ff;
+  --accent-light: #1c2d4a;
+  --gold: #e3b341;
+  --gold-light: #2d2107;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --card: #161b22;
+  --nav-bg: rgba(13,17,23,0.92);
+  --shadow: 0 2px 20px rgba(0,0,0,0.4);
+  --shadow2: 0 8px 40px rgba(0,0,0,0.5);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+h1,h2,h3,h4 { font-family: 'DM Serif Display', serif; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: 0.25rem; }
+.nav-links a {
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  padding: 6px 14px; border-radius: 8px;
+  transition: all 0.2s; cursor: pointer;
+}
+.nav-links a:hover { background: var(--accent-light); color: var(--accent); }
+.nav-links a.active { background: var(--accent-light); color: var(--accent); }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+.btn-nav {
+  padding: 8px 18px; border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+  border: 1px solid var(--border2); background: transparent; color: var(--text);
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-nav:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-nav.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-nav.primary:hover { background: var(--accent2); }
+#darkToggle {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--bg3); border: 1px solid var(--border);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s;
+}
+#darkToggle:hover { background: var(--accent-light); }
+.hamburger { display:none; cursor:pointer; flex-direction:column; gap:5px; }
+.hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:all 0.3s; }
+
+/* ── PAGE SYSTEM ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  padding: 120px 2rem 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  background: linear-gradient(160deg, var(--bg) 0%, var(--bg3) 50%, var(--bg) 100%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position: absolute; top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(26,79,160,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content:'';
+  position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(201,146,42,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold-light); color: var(--gold);
+  border: 1px solid rgba(201,146,42,0.3);
+  padding: 6px 16px; border-radius: 100px;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.6s ease both;
+}
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero h1 em { color: var(--accent); font-style: italic; }
+.hero p {
+  max-width: 560px;
+  color: var(--text2);
+  font-size: 1.1rem; line-height: 1.7;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-search {
+  width: 100%; max-width: 560px;
+  display: flex; gap: 0;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  box-shadow: var(--shadow2);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.hero-search input {
+  flex: 1; padding: 16px 20px;
+  border: none; background: transparent; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  outline: none;
+}
+.hero-search input::placeholder { color: var(--text3); }
+.hero-search button {
+  padding: 12px 24px; margin: 6px;
+  background: var(--accent); color: white;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.hero-search button:hover { background: var(--accent2); transform: scale(1.02); }
+.hero-btns {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.btn-hero {
+  padding: 12px 24px; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; text-decoration: none; border: 1px solid var(--border2);
+  background: var(--card); color: var(--text);
+}
+.btn-hero:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+.btn-hero.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-hero.primary:hover { background: var(--accent2); border-color: var(--accent2); }
+
+/* ── STATS ── */
+.stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px; max-width: 700px; width: 100%;
+  margin-top: 3rem;
+  animation: fadeUp 0.6s 0.5s ease both;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem;
+  text-align: center; box-shadow: var(--shadow);
+}
+.stat-num { font-size: 2rem; font-weight: 600; color: var(--accent); font-family: 'DM Serif Display', serif; }
+.stat-label { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+
+/* ── SECTIONS ── */
+.section { padding: 80px 2rem; max-width: 1100px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 3rem; }
+.section-header h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 0.75rem; }
+.section-header p { color: var(--text2); max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+/* ── FEATURED BOOKS ── */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+.book-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius2); overflow: hidden;
+  transition: all 0.3s; cursor: pointer; position: relative;
+}
+.book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow2); }
+.book-cover {
+  height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; position: relative; overflow: hidden;
+}
+.book-cover::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, currentColor, transparent);
+  opacity: 0.15;
+}
+.book-info { padding: 14px; }
+.book-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; line-height: 1.3; }
+.book-author { font-size: 0.8rem; color: var(--text2); }
+.book-tag {
+  display: inline-block; font-size: 0.7rem; font-weight: 600;
+  padding: 3px 10px; border-radius: 100px; margin-top: 8px;
+  letter-spacing: 0.03em;
+}
+.book-avail {
+  position: absolute; top: 10px; right: 10px;
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.avail-yes { background: var(--success); }
+.avail-no { background: var(--danger); }
+
+/* ── CATALOG PAGE ── */
+.catalog-header {
+  padding: 100px 2rem 40px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.catalog-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.catalog-header p { color: var(--text2); }
+.catalog-controls {
+  padding: 1.5rem 2rem;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  max-width: 1200px; margin: 0 auto;
+}
+.search-box {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 10px 14px;
+}
+.search-box input {
+  border: none; background: transparent; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; flex: 1; outline: none;
+}
+.filter-select {
+  padding: 10px 14px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--bg);
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  cursor: pointer; outline: none;
+}
+.view-toggle { display: flex; gap: 4px; }
+.view-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--bg);
+  color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.view-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.catalog-body { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.catalog-list { display: flex; flex-direction: column; gap: 12px; }
+.list-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+  transition: all 0.2s; cursor: pointer;
+}
+.list-item:hover { box-shadow: var(--shadow); transform: translateX(4px); }
+.list-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; flex-shrink: 0;
+}
+.list-meta { flex: 1; }
+.list-meta h4 { font-weight: 600; font-size: 0.95rem; }
+.list-meta p { font-size: 0.82rem; color: var(--text2); margin-top: 2px; }
+.list-actions { display: flex; gap: 8px; align-items: center; }
+.btn-sm {
+  padding: 7px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 500;
+  border: 1px solid var(--border2); background: transparent; color: var(--text);
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-sm:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-sm.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.category-tabs {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.category-tabs::-webkit-scrollbar { display: none; }
+.cat-tab {
+  white-space: nowrap; padding: 8px 18px; border-radius: 100px;
+  font-size: 0.82rem; font-weight: 500;
+  border: 1px solid var(--border2); background: var(--bg);
+  color: var(--text2); cursor: pointer; transition: all 0.2s;
+}
+.cat-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+.cat-tab:hover:not(.active) { background: var(--accent-light); color: var(--accent); }
+
+/* ── AUTH PAGE ── */
+.auth-page {
+  min-height: 100vh; padding-top: 64px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+}
+.auth-container {
+  width: 100%; max-width: 440px; padding: 2rem;
+}
+.auth-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 2.5rem; box-shadow: var(--shadow2);
+}
+.auth-logo { text-align: center; margin-bottom: 2rem; }
+.auth-logo h2 { font-size: 1.6rem; }
+.auth-logo p { color: var(--text2); font-size: 0.9rem; margin-top: 4px; }
+.auth-tabs { display: flex; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+.auth-tab {
+  flex: 1; padding: 12px; text-align: center;
+  font-size: 0.9rem; font-weight: 500; cursor: pointer; color: var(--text2);
+  border-bottom: 2px solid transparent; transition: all 0.2s; margin-bottom: -1px;
+}
+.auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label {
+  display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; color: var(--text);
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 10px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  transition: all 0.2s; outline: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,79,160,0.1);
+}
+.btn-full {
+  width: 100%; padding: 14px; border-radius: 10px;
+  background: var(--accent); color: white;
+  border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-full:hover { background: var(--accent2); transform: translateY(-1px); }
+.auth-divider {
+  text-align: center; margin: 1.25rem 0; position: relative;
+  color: var(--text3); font-size: 0.85rem;
+}
+.auth-divider::before, .auth-divider::after {
+  content:''; position:absolute; top:50%;
+  width: calc(50% - 1.5rem); height: 1px; background: var(--border);
+}
+.auth-divider::before { left:0; }
+.auth-divider::after { right:0; }
+
+/* ── DASHBOARD ── */
+.dash-layout {
+  display: flex; min-height: calc(100vh - 64px); margin-top: 64px;
+}
+.sidebar {
+  width: 240px; flex-shrink: 0;
+  background: var(--card); border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto;
+}
+.sidebar-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; margin-bottom: 1.5rem;
+  background: var(--bg3); border-radius: var(--radius); 
+}
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 0.85rem;
+}
+.user-info p:first-child { font-size: 0.85rem; font-weight: 600; }
+.user-info p:last-child { font-size: 0.75rem; color: var(--text2); }
+.sidebar-nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  color: var(--text2); text-decoration: none; font-size: 0.875rem;
+  transition: all 0.2s; margin-bottom: 2px; cursor: pointer;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: var(--accent-light); color: var(--accent);
+}
+.sidebar-nav .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.dash-content { flex: 1; padding: 2rem; overflow-y: auto; }
+.dash-title { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.dash-subtitle { color: var(--text2); font-size: 0.9rem; margin-bottom: 2rem; }
+.metric-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 2rem;
+}
+.metric-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow);
+}
+.metric-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.metric-num { font-size: 1.75rem; font-weight: 700; font-family: 'DM Serif Display', serif; }
+.metric-label { font-size: 0.82rem; color: var(--text2); margin-top: 4px; }
+.dash-section { margin-bottom: 2rem; }
+.dash-section h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 12px 16px; text-align: left;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text2); background: var(--bg3); border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 14px 16px; font-size: 0.875rem;
+  border-bottom: 1px solid var(--border); color: var(--text);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+.badge {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+}
+.badge-success { background: rgba(5,150,105,0.1); color: var(--success); }
+.badge-danger { background: rgba(220,38,38,0.1); color: var(--danger); }
+.badge-warning { background: rgba(217,119,6,0.1); color: var(--warning); }
+.badge-info { background: var(--accent-light); color: var(--accent); }
+
+/* ── ADMIN ── */
+.admin-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px; margin-bottom: 2rem;
+}
+.admin-action-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; cursor: pointer;
+  transition: all 0.2s; text-align: center; box-shadow: var(--shadow);
+}
+.admin-action-card:hover { transform: translateY(-3px); box-shadow: var(--shadow2); border-color: var(--accent); }
+.admin-action-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.admin-action-card h4 { font-weight: 600; margin-bottom: 6px; }
+.admin-action-card p { font-size: 0.82rem; color: var(--text2); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── ABOUT ── */
+.about-hero {
+  padding: 120px 2rem 60px;
+  background: var(--bg3); text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.about-hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+.about-hero p { max-width: 600px; margin: 0 auto; color: var(--text2); line-height: 1.8; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.about-img {
+  background: var(--bg3); border-radius: var(--radius2); height: 320px;
+  display: flex; align-items: center; justify-content: center; font-size: 6rem;
+  border: 1px solid var(--border);
+}
+.service-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+.service-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.service-card:hover { transform: translateY(-3px); box-shadow: var(--shadow2); }
+.service-icon { font-size: 2rem; margin-bottom: 1rem; }
+.service-card h4 { font-weight: 600; margin-bottom: 8px; }
+.service-card p { font-size: 0.875rem; color: var(--text2); line-height: 1.6; }
+
+/* ── CONTACT ── */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+.contact-info h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+.contact-info p { color: var(--text2); line-height: 1.7; margin-bottom: 1.5rem; }
+.contact-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+.contact-item-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-light); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.contact-item-text p:first-child { font-weight: 600; font-size: 0.9rem; }
+.contact-item-text p:last-child { font-size: 0.85rem; color: var(--text2); margin-top: 2px; }
+.hours-table { width: 100%; font-size: 0.85rem; }
+.hours-table tr td:first-child { color: var(--text2); padding: 6px 0; }
+.hours-table tr td:last-child { text-align: right; font-weight: 500; }
+.contact-form-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 2rem; box-shadow: var(--shadow);
+}
+.contact-form-card h3 { margin-bottom: 1.5rem; }
+.form-group textarea {
+  resize: vertical; min-height: 120px; line-height: 1.6;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--text); color: #e2e8f0;
+  padding: 3rem 2rem 1.5rem;
+  margin-top: 4rem;
+}
+.footer-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 2rem;
+  margin-bottom: 2rem;
+}
+.footer-brand h3 { font-size: 1.4rem; color: white; margin-bottom: 0.75rem; }
+.footer-brand p { font-size: 0.85rem; color: #94a3b8; line-height: 1.7; }
+.footer-col h4 { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8; margin-bottom: 1rem; }
+.footer-col a { display: block; font-size: 0.875rem; color: #cbd5e1; text-decoration: none; margin-bottom: 8px; cursor: pointer; transition: color 0.2s; }
+.footer-col a:hover { color: white; }
+.footer-bottom {
+  max-width: 1100px; margin: 0 auto;
+  padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem; color: #64748b;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card); border-radius: var(--radius2);
+  padding: 2rem; max-width: 480px; width: 100%;
+  box-shadow: var(--shadow2); animation: fadeUp 0.3s ease;
+  border: 1px solid var(--border);
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-header h3 { font-size: 1.25rem; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 18px; color: var(--text2); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.modal-close:hover { background: var(--bg3); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--text); color: white;
+  padding: 14px 20px; border-radius: 12px;
+  font-size: 0.9rem; box-shadow: var(--shadow2);
+  transform: translateY(20px); opacity: 0;
+  transition: all 0.3s; pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--success); }
+.toast.warning { background: var(--warning); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp 0.5s ease both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--nav-bg); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem; display: none;
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block; padding: 12px 16px; border-radius: 8px;
+    color: var(--text); text-decoration: none; font-size: 0.95rem; margin-bottom: 4px;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .mobile-menu a:hover { background: var(--accent-light); color: var(--accent); }
+  .about-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1/-1; }
+  .sidebar { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+  .dash-layout { margin-top: 64px; }
+  .catalog-controls { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2.4rem; }
+  .hero-btns { flex-direction: column; }
+  .btn-hero { text-align: center; }
+}
+
+/* ── MISC ── */
+.highlight-blue { background: var(--accent-light); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+.tag-sci { background: rgba(5,150,105,0.1); color: var(--success); }
+.tag-tech { background: var(--accent-light); color: var(--accent); }
+.tag-lit { background: rgba(201,146,42,0.15); color: var(--gold); }
+.tag-hist { background: rgba(220,38,38,0.1); color: var(--danger); }
+.tag-math { background: rgba(124,58,237,0.1); color: #7c3aed; }
+.empty-state { text-align: center; padding: 3rem; color: var(--text2); }
+.empty-state div { font-size: 3rem; margin-bottom: 1rem; }
+.progress-bar {
+  height: 6px; background: var(--border);
+  border-radius: 3px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.5s; }
+.notification-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--danger); display: inline-block; margin-left: 6px;
+}
+
+/* Dark mode nav-actions fix */
+[data-theme="dark"] .btn-nav:not(.primary) { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo" onclick="showPage('home')">
+    📚 <span>Athenaeum</span> Library
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a onclick="showPage('home')" class="active" id="nav-home">Home</a>
+    <a onclick="showPage('about')" id="nav-about">About</a>
+    <a onclick="showPage('catalog')" id="nav-catalog">Books</a>
+    <a onclick="showPage('contact')" id="nav-contact">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <button id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+    <button class="btn-nav" onclick="showPage('auth')">Log In</button>
+    <button class="btn-nav primary" onclick="showPage('dashboard')">Dashboard</button>
+    <div class="hamburger" onclick="toggleMobile()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="showPage('home');closeMobile()">🏠 Home</a>
+  <a onclick="showPage('about');closeMobile()">ℹ️ About</a>
+  <a onclick="showPage('catalog');closeMobile()">📖 Books Catalog</a>
+  <a onclick="showPage('auth');closeMobile()">🔐 Login / Sign Up</a>
+  <a onclick="showPage('dashboard');closeMobile()">📊 Dashboard</a>
+  <a onclick="showPage('admin');closeMobile()">⚙️ Admin Panel</a>
+  <a onclick="showPage('contact');closeMobile()">📞 Contact</a>
+</div>
+
+<!-- ══════════════ HOME PAGE ══════════════ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-badge">🏛️ Est. 2001 · Central Campus Library</div>
+    <h1>Your Gateway to<br><em>Knowledge</em> & Discovery</h1>
+    <p>Access thousands of books, journals, and digital resources. Manage borrowings, track returns, and explore new titles — all in one place.</p>
+    <div class="hero-search">
+      <input type="text" placeholder="Search by title, author, ISBN or subject…" id="heroSearch" onkeyup="heroSearchFn(event)">
+      <button onclick="showPage('catalog')">Search Books</button>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-hero primary" onclick="showPage('catalog')">📚 Browse Catalog</button>
+      <button class="btn-hero" onclick="showPage('auth')">🔐 Student Login</button>
+      <button class="btn-hero" onclick="showPage('contact')">📍 Find Us</button>
+    </div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num">12,450</div><div class="stat-label">Total Books</div></div>
+      <div class="stat-card"><div class="stat-num">3,200</div><div class="stat-label">Registered Students</div></div>
+      <div class="stat-card"><div class="stat-num">842</div><div class="stat-label">Currently Issued</div></div>
+      <div class="stat-card"><div class="stat-num">98%</div><div class="stat-label">Satisfaction Rate</div></div>
+    </div>
+  </section>
+
+  <!-- Featured Books -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Featured Books</h2>
+      <p>Curated picks from our librarians — popular titles across all departments</p>
+    </div>
+    <div class="books-grid" id="featuredGrid"></div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <button class="btn-hero primary" onclick="showPage('catalog')">View All Books →</button>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div style="background:var(--bg3);padding:4rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="section-header" style="padding:0 2rem;">
+      <h2>Browse by Category</h2>
+      <p>Find exactly what you need across our organized collection</p>
+    </div>
+    <div style="max-width:1100px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('Science');showPage('catalog')">
+        <div class="service-icon">🔬</div><h4>Science</h4><p style="font-size:0.8rem;margin-top:4px;">1,240 books</p>
+      </div>
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('Technology');showPage('catalog')">
+        <div class="service-icon">💻</div><h4>Technology</h4><p style="font-size:0.8rem;margin-top:4px;">980 books</p>
+      </div>
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('Literature');showPage('catalog')">
+        <div class="service-icon">📝</div><h4>Literature</h4><p style="font-size:0.8rem;margin-top:4px;">2,100 books</p>
+      </div>
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('History');showPage('catalog')">
+        <div class="service-icon">🏛️</div><h4>History</h4><p style="font-size:0.8rem;margin-top:4px;">870 books</p>
+      </div>
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('Mathematics');showPage('catalog')">
+        <div class="service-icon">📐</div><h4>Mathematics</h4><p style="font-size:0.8rem;margin-top:4px;">640 books</p>
+      </div>
+      <div class="service-card" style="text-align:center;cursor:pointer;" onclick="filterCat('Arts');showPage('catalog')">
+        <div class="service-icon">🎨</div><h4>Arts</h4><p style="font-size:0.8rem;margin-top:4px;">530 books</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ABOUT PAGE ══════════════ -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <h1>About Athenaeum Library</h1>
+    <p>Serving students, faculty, and staff since 2001. We are committed to fostering a culture of learning, research, and intellectual curiosity on campus.</p>
+  </div>
+  <div class="section">
+    <div class="about-grid" style="margin-bottom:4rem;">
+      <div>
+        <h2 style="font-size:2rem;margin-bottom:1rem;">Our Mission</h2>
+        <p style="color:var(--text2);line-height:1.8;margin-bottom:1rem;">The Athenaeum Library strives to provide equitable access to a world-class collection of academic, scientific, and cultural resources. We believe every student deserves the tools needed to succeed.</p>
+        <p style="color:var(--text2);line-height:1.8;margin-bottom:1.5rem;">Our dedicated librarians and staff are here to assist you with research, citations, digital resources, interlibrary loans, and much more.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="background:var(--accent-light);color:var(--accent);padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;">📚 12,450+ Books</div>
+          <div style="background:var(--gold-light);color:var(--gold);padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;">🌐 Digital Access</div>
+          <div style="background:rgba(5,150,105,0.1);color:var(--success);padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;">🎓 Student Support</div>
+        </div>
+      </div>
+      <div class="about-img">📖</div>
+    </div>
+    <div class="section-header">
+      <h2>Our Services</h2>
+      <p>Everything you need for academic excellence</p>
+    </div>
+    <div class="service-cards">
+      <div class="service-card"><div class="service-icon">📖</div><h4>Book Borrowing</h4><p>Borrow up to 5 books at a time for 14 days. Renewals available online or in person.</p></div>
+      <div class="service-card"><div class="service-icon">🖥️</div><h4>Digital Resources</h4><p>Access thousands of e-books, journals, and research databases from anywhere on campus.</p></div>
+      <div class="service-card"><div class="service-icon">🔍</div><h4>Research Help</h4><p>One-on-one sessions with our librarians for citations, research strategies, and literature reviews.</p></div>
+      <div class="service-card"><div class="service-icon">🏫</div><h4>Study Spaces</h4><p>Quiet zones, group study rooms, and collaborative pods available for booking.</p></div>
+      <div class="service-card"><div class="service-icon">🔄</div><h4>Interlibrary Loans</h4><p>Request books and articles not in our collection from partner institutions worldwide.</p></div>
+      <div class="service-card"><div class="service-icon">📋</div><h4>Course Reserves</h4><p>Access required course reading materials placed on reserve by your professors.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CATALOG PAGE ══════════════ -->
+<div id="page-catalog" class="page">
+  <div class="catalog-header">
+    <h1>Books Catalog</h1>
+    <p>Browse our complete collection of 12,450+ titles</p>
+  </div>
+  <div class="catalog-controls">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="Search books, authors, ISBN…" id="catalogSearch" oninput="renderCatalog()">
+    </div>
+    <select class="filter-select" id="catFilter" onchange="renderCatalog()">
+      <option value="">All Categories</option>
+      <option value="Science">Science</option>
+      <option value="Technology">Technology</option>
+      <option value="Literature">Literature</option>
+      <option value="History">History</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Arts">Arts</option>
+    </select>
+    <select class="filter-select" id="availFilter" onchange="renderCatalog()">
+      <option value="">Availability</option>
+      <option value="available">Available</option>
+      <option value="issued">Issued</option>
+    </select>
+    <div class="view-toggle">
+      <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+      <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">☰</button>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:1rem 2rem 0;">
+    <div class="category-tabs" id="catTabs"></div>
+  </div>
+  <div class="catalog-body">
+    <div id="catalogContainer"></div>
+    <div id="catalogEmpty" class="empty-state" style="display:none;">
+      <div>📭</div>
+      <p>No books found matching your search.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ AUTH PAGE ══════════════ -->
+<div id="page-auth" class="page">
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-card fade-in">
+        <div class="auth-logo">
+          <div style="font-size:2.5rem;margin-bottom:8px;">📚</div>
+          <h2>Athenaeum Library</h2>
+          <p>Sign in to manage your library account</p>
+        </div>
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Login</div>
+          <div class="auth-tab" id="signupTab" onclick="switchAuthTab('signup')">Sign Up</div>
+        </div>
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+          <div class="form-group">
+            <label>Student ID / Email</label>
+            <input type="text" placeholder="e.g. STU2024001 or student@college.edu">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter your password">
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+            <label style="display:flex;gap:8px;font-size:0.85rem;cursor:pointer;">
+              <input type="checkbox" style="width:auto;"> Remember me
+            </label>
+            <a style="font-size:0.85rem;color:var(--accent);cursor:pointer;">Forgot password?</a>
+          </div>
+          <button class="btn-full" onclick="doLogin()">Sign In →</button>
+          <div class="auth-divider">or continue with</div>
+          <button class="btn-full" style="background:var(--bg3);color:var(--text);margin-bottom:0.75rem;" onclick="showToast('Google login coming soon','warning')">
+            🔵 Sign in with Google
+          </button>
+        </div>
+        <!-- SIGNUP FORM -->
+        <div id="signupForm" style="display:none;">
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+          </div>
+          <div class="form-group"><label>Student ID</label><input type="text" placeholder="STU2024001"></div>
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="john.doe@college.edu"></div>
+          <div class="form-group"><label>Department</label>
+            <select>
+              <option>Select Department</option>
+              <option>Computer Science</option>
+              <option>Engineering</option>
+              <option>Arts & Humanities</option>
+              <option>Natural Sciences</option>
+              <option>Business</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Password</label><input type="password" placeholder="Create a strong password"></div>
+          <button class="btn-full" onclick="doSignup()">Create Account →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ STUDENT DASHBOARD ══════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-user">
+        <div class="user-avatar">AS</div>
+        <div class="user-info">
+          <p>Amir Shah</p>
+          <p>STU2024047</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="active" onclick="showDashSection('overview')"><span class="nav-icon">📊</span> Overview</a>
+        <a onclick="showDashSection('borrowed')"><span class="nav-icon">📚</span> Borrowed Books</a>
+        <a onclick="showDashSection('history')"><span class="nav-icon">🕐</span> Borrow History</a>
+        <a onclick="showDashSection('fines')"><span class="nav-icon">💰</span> Fines <span class="notification-dot"></span></a>
+        <a onclick="showDashSection('request')"><span class="nav-icon">📩</span> Request Book</a>
+        <a onclick="showDashSection('wishlist')"><span class="nav-icon">⭐</span> Wishlist</a>
+        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+        <a onclick="showPage('catalog')"><span class="nav-icon">🔍</span> Browse Catalog</a>
+        <a onclick="showPage('home')"><span class="nav-icon">🏠</span> Home</a>
+        <a onclick="showPage('auth')"><span class="nav-icon">🚪</span> Logout</a>
+      </nav>
+    </div>
+    <div class="dash-content" id="dashContent"></div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN DASHBOARD ══════════════ -->
+<div id="page-admin" class="page">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-user" style="background:rgba(26,79,160,0.1);">
+        <div class="user-avatar" style="background:var(--gold);">AD</div>
+        <div class="user-info">
+          <p>Dr. Nadia Patel</p>
+          <p style="color:var(--gold);">Librarian</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="active" onclick="showAdminSection('overview')"><span class="nav-icon">📊</span> Dashboard</a>
+        <a onclick="showAdminSection('books')"><span class="nav-icon">📚</span> Manage Books</a>
+        <a onclick="showAdminSection('users')"><span class="nav-icon">👥</span> Manage Users</a>
+        <a onclick="showAdminSection('issued')"><span class="nav-icon">📋</span> Issued Books</a>
+        <a onclick="showAdminSection('reports')"><span class="nav-icon">📈</span> Reports</a>
+        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+        <a onclick="showPage('catalog')"><span class="nav-icon">🔍</span> View Catalog</a>
+        <a onclick="showPage('home')"><span class="nav-icon">🏠</span> Home</a>
+      </nav>
+    </div>
+    <div class="dash-content" id="adminContent"></div>
+  </div>
+</div>
+
+<!-- ══════════════ CONTACT PAGE ══════════════ -->
+<div id="page-contact" class="page">
+  <div style="padding:100px 0 0;background:var(--bg3);border-bottom:1px solid var(--border);">
+    <div style="max-width:700px;margin:0 auto;text-align:center;padding:0 2rem 3rem;">
+      <h1 style="font-size:3rem;margin-bottom:1rem;">Get In Touch</h1>
+      <p style="color:var(--text2);line-height:1.7;">Have questions about our collection, services, or account? Our team is here to help. Visit us in person or reach out online.</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Library Information</h3>
+        <p>We're open throughout the week to support your research and learning needs.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <p>Address</p>
+            <p>Main Campus, Building A, 2nd Floor<br>College Road, Srinagar — 190001</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <p>Phone</p>
+            <p>+91 194-246-0100</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div class="contact-item-text">
+            <p>Email</p>
+            <p>library@athenaeum.edu.in</p>
+          </div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-top:12px;">
+          <p style="font-weight:600;font-size:0.9rem;margin-bottom:12px;">⏰ Opening Hours</p>
+          <table class="hours-table">
+            <tr><td>Monday – Friday</td><td>8:00 AM – 8:00 PM</td></tr>
+            <tr><td>Saturday</td><td>9:00 AM – 5:00 PM</td></tr>
+            <tr><td>Sunday</td><td>10:00 AM – 3:00 PM</td></tr>
+            <tr><td>Public Holidays</td><td style="color:var(--danger);">Closed</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <h3>Send Us a Message</h3>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Your name"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last name"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Subject</label>
+          <select>
+            <option>General Inquiry</option>
+            <option>Book Request</option>
+            <option>Account Issue</option>
+            <option>Fine Dispute</option>
+            <option>Feedback</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Describe your query in detail…"></textarea></div>
+        <button class="btn-full" onclick="sendContact()">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="siteFooter">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>📚 Athenaeum Library</h3>
+      <p>Empowering students and faculty with access to knowledge since 2001. Open Monday through Sunday for all your academic needs.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('catalog')">Browse Books</a>
+      <a onclick="showPage('about')">About Us</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Student</h4>
+      <a onclick="showPage('auth')">Login / Sign Up</a>
+      <a onclick="showPage('dashboard')">My Dashboard</a>
+      <a onclick="showDashSection('request');showPage('dashboard')">Request Book</a>
+      <a onclick="showDashSection('fines');showPage('dashboard')">Fine Status</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a>📍 Srinagar, J&K — 190001</a>
+      <a>📞 +91 194-246-0100</a>
+      <a>✉️ library@athenaeum.edu.in</a>
+      <a onclick="showPage('admin')">⚙️ Admin Panel</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Athenaeum Library. All rights reserved.</span>
+    <span>Privacy Policy · Terms of Service</span>
+  </div>
+</footer>
+
+<!-- MODAL: Book Detail -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Book Title</h3>
+      <button class="modal-close" onclick="closeModal('bookModal')">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: Add Book (Admin) -->
+<div class="modal-overlay" id="addBookModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>Add New Book</h3>
+      <button class="modal-close" onclick="closeModal('addBookModal')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Book Title</label><input type="text" placeholder="Full title" id="addTitle"></div>
+      <div class="form-group"><label>Author</label><input type="text" placeholder="Author name" id="addAuthor"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>ISBN</label><input type="text" placeholder="ISBN-13" id="addISBN"></div>
+      <div class="form-group"><label>Category</label>
+        <select id="addCat">
+          <option>Science</option><option>Technology</option><option>Literature</option>
+          <option>History</option><option>Mathematics</option><option>Arts</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Published Year</label><input type="number" placeholder="2023" id="addYear"></div>
+      <div class="form-group"><label>Copies Available</label><input type="number" placeholder="3" id="addCopies"></div>
+    </div>
+    <button class="btn-full" onclick="addBook()">Add Book to Catalog</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const booksData = [
+  { id:1, title:"Introduction to Algorithms", author:"Cormen, Leiserson", cat:"Technology", emoji:"💻", color:"#dbeafe", available:true, year:2022, copies:3, isbn:"978-0262046305" },
+  { id:2, title:"Sapiens: A Brief History", author:"Yuval Noah Harari", cat:"History", emoji:"🏛️", color:"#fef3c7", available:true, year:2015, copies:5, isbn:"978-0062316097" },
+  { id:3, title:"The Great Gatsby", author:"F. Scott Fitzgerald", cat:"Literature", emoji:"📝", color:"#fce7f3", available:false, year:1925, copies:2, isbn:"978-0743273565" },
+  { id:4, title:"Calculus: Early Transcendentals", author:"James Stewart", cat:"Mathematics", emoji:"📐", color:"#ede9fe", available:true, year:2020, copies:4, isbn:"978-1285741550" },
+  { id:5, title:"A Brief History of Time", author:"Stephen Hawking", cat:"Science", emoji:"🔬", color:"#d1fae5", available:true, year:1998, copies:3, isbn:"978-0553380163" },
+  { id:6, title:"1984", author:"George Orwell", cat:"Literature", emoji:"📖", color:"#fce7f3", available:true, year:1949, copies:6, isbn:"978-0451524935" },
+  { id:7, title:"Clean Code", author:"Robert C. Martin", cat:"Technology", emoji:"⌨️", color:"#dbeafe", available:false, year:2008, copies:2, isbn:"978-0132350884" },
+  { id:8, title:"The Art of War", author:"Sun Tzu", cat:"History", emoji:"⚔️", color:"#fef3c7", available:true, year:500, copies:4, isbn:"978-1590302255" },
+  { id:9, title:"Biology: A Global Approach", author:"Campbell & Reece", cat:"Science", emoji:"🧬", color:"#d1fae5", available:true, year:2021, copies:3, isbn:"978-0321775658" },
+  { id:10, title:"The Elements of Style", author:"Strunk & White", cat:"Literature", emoji:"✍️", color:"#fce7f3", available:true, year:2000, copies:5, isbn:"978-0205309023" },
+  { id:11, title:"Linear Algebra Done Right", author:"Sheldon Axler", cat:"Mathematics", emoji:"∑", color:"#ede9fe", available:false, year:2015, copies:1, isbn:"978-3319110790" },
+  { id:12, title:"Design Patterns", author:"Gang of Four", cat:"Technology", emoji:"🏗️", color:"#dbeafe", available:true, year:1994, copies:2, isbn:"978-0201633610" },
+  { id:13, title:"World History in Brief", author:"Peter N. Stearns", cat:"History", emoji:"🌍", color:"#fef3c7", available:true, year:2019, copies:4, isbn:"978-0134586458" },
+  { id:14, title:"The Alchemist", author:"Paulo Coelho", cat:"Literature", emoji:"🌙", color:"#fce7f3", available:true, year:1988, copies:7, isbn:"978-0062315007" },
+  { id:15, title:"Physics for Scientists", author:"Serway & Jewett", cat:"Science", emoji:"⚛️", color:"#d1fae5", available:false, year:2018, copies:3, isbn:"978-1337553278" },
+  { id:16, title:"Digital Art Fundamentals", author:"David S. Touretzky", cat:"Arts", emoji:"🎨", color:"#fed7aa", available:true, year:2020, copies:2, isbn:"978-1234567890" },
+];
+
+let catalogView = 'grid';
+let activeCatFilter = '';
+let currentDashSection = 'overview';
+let currentAdminSection = 'overview';
+
+// ── PAGE ROUTING ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  // Show/hide footer
+  document.getElementById('siteFooter').style.display = ['dashboard','admin','auth'].includes(name) ? 'none' : '';
+  window.scrollTo(0, 0);
+  if (name === 'catalog') renderCatalog();
+  if (name === 'dashboard') renderDash(currentDashSection);
+  if (name === 'admin') renderAdmin(currentAdminSection);
+}
+
+// ── DARK MODE ──
+function toggleDark() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('darkToggle').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── MOBILE MENU ──
+function toggleMobile() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ── TOAST ──
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MODALS ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── HERO SEARCH ──
+function heroSearchFn(e) {
+  if (e.key === 'Enter') {
+    document.getElementById('catalogSearch').value = document.getElementById('heroSearch').value;
+    showPage('catalog');
+  }
+}
+
+// ── FEATURED BOOKS ──
+function renderFeatured() {
+  const grid = document.getElementById('featuredGrid');
+  const featured = booksData.slice(0, 8);
+  grid.innerHTML = featured.map(b => bookCardHTML(b)).join('');
+}
+
+function bookCardHTML(b) {
+  const tagClass = { Science:'tag-sci', Technology:'tag-tech', Literature:'tag-lit', History:'tag-hist', Mathematics:'tag-math', Arts:'tag-hist' };
+  return `<div class="book-card" onclick="showBookDetail(${b.id})">
+    <div class="book-avail ${b.available ? 'avail-yes' : 'avail-no'}"></div>
+    <div class="book-cover" style="background:${b.color};">${b.emoji}</div>
+    <div class="book-info">
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">${b.author}</div>
+      <span class="book-tag ${tagClass[b.cat] || 'tag-tech'}">${b.cat}</span>
+    </div>
+  </div>`;
+}
+
+// ── CATALOG ──
+function filterCat(cat) { activeCatFilter = cat; }
+
+function renderCatalog() {
+  const q = (document.getElementById('catalogSearch')?.value || '').toLowerCase();
+  const cat = document.getElementById('catFilter')?.value || activeCatFilter || '';
+  const avail = document.getElementById('availFilter')?.value || '';
+  if (cat) { document.getElementById('catFilter').value = cat; activeCatFilter = ''; }
+
+  // Update tabs
+  const tabs = document.getElementById('catTabs');
+  const cats = ['All', 'Science', 'Technology', 'Literature', 'History', 'Mathematics', 'Arts'];
+  tabs.innerHTML = cats.map(c =>
+    `<div class="cat-tab ${(cat===c||(c==='All'&&!cat))?'active':''}" onclick="setCatTab('${c==='All'?'':c}')">${c}</div>`
+  ).join('');
+
+  let filtered = booksData.filter(b => {
+    const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || b.isbn.includes(q);
+    const matchCat = !cat || b.cat === cat;
+    const matchAvail = !avail || (avail === 'available' ? b.available : !b.available);
+    return matchQ && matchCat && matchAvail;
+  });
+
+  const container = document.getElementById('catalogContainer');
+  const empty = document.getElementById('catalogEmpty');
+  if (!filtered.length) { container.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  const tagClass = { Science:'tag-sci', Technology:'tag-tech', Literature:'tag-lit', History:'tag-hist', Mathematics:'tag-math', Arts:'tag-hist' };
+
+  if (catalogView === 'grid') {
+    container.className = 'catalog-grid';
+    container.innerHTML = filtered.map(b => bookCardHTML(b)).join('');
+  } else {
+    container.className = 'catalog-list';
+    container.innerHTML = filtered.map(b => `
+      <div class="list-item" onclick="showBookDetail(${b.id})">
+        <div class="list-icon" style="background:${b.color};">${b.emoji}</div>
+        <div class="list-meta">
+          <h4>${b.title}</h4>
+          <p>${b.author} · ${b.year} · ISBN: ${b.isbn}</p>
+        </div>
+        <div class="list-actions">
+          <span class="book-tag ${tagClass[b.cat]}">${b.cat}</span>
+          <span class="badge ${b.available ? 'badge-success' : 'badge-danger'}">${b.available ? 'Available' : 'Issued'}</span>
+          <button class="btn-sm primary" onclick="event.stopPropagation();borrowBook(${b.id})">${b.available ? 'Borrow' : 'Reserve'}</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function setCatTab(cat) {
+  activeCatFilter = cat;
+  document.getElementById('catFilter').value = cat;
+  renderCatalog();
+}
+
+function setView(v) {
+  catalogView = v;
+  document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+  renderCatalog();
+}
+
+// ── BOOK DETAIL MODAL ──
+function showBookDetail(id) {
+  const b = booksData.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('modalTitle').textContent = b.title;
+  document.getElementById('modalBody').innerHTML = `
+    <div style="display:flex;gap:16px;margin-bottom:1.5rem;">
+      <div style="width:80px;height:100px;background:${b.color};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0;">${b.emoji}</div>
+      <div>
+        <p style="font-weight:600;font-size:1.1rem;margin-bottom:4px;">${b.title}</p>
+        <p style="color:var(--text2);margin-bottom:8px;">${b.author}</p>
+        <span class="badge ${b.available ? 'badge-success' : 'badge-danger'}">${b.available ? '✓ Available' : '✗ Currently Issued'}</span>
+      </div>
+    </div>
+    <table style="width:100%;font-size:0.875rem;border-collapse:collapse;">
+      <tr><td style="padding:8px 0;color:var(--text2);">Category</td><td style="padding:8px 0;font-weight:500;">${b.cat}</td></tr>
+      <tr><td style="padding:8px 0;color:var(--text2);">ISBN</td><td style="padding:8px 0;">${b.isbn}</td></tr>
+      <tr><td style="padding:8px 0;color:var(--text2);">Year</td><td style="padding:8px 0;">${b.year}</td></tr>
+      <tr><td style="padding:8px 0;color:var(--text2);">Copies Available</td><td style="padding:8px 0;">${b.copies}</td></tr>
+    </table>
+    <div style="display:flex;gap:10px;margin-top:1.5rem;">
+      <button class="btn-full" ${!b.available ? 'style="background:var(--warning)"' : ''} onclick="borrowBook(${b.id});closeModal('bookModal')">
+        ${b.available ? '📥 Borrow Book' : '🔔 Reserve'}
+      </button>
+    </div>
+  `;
+  openModal('bookModal');
+}
+
+function borrowBook(id) {
+  const b = booksData.find(x => x.id === id);
+  showToast(b.available ? `"${b.title}" added to your borrows!` : `Reserved "${b.title}". You'll be notified when available.`, b.available ? 'success' : 'warning');
+}
+
+// ── AUTH ──
+function switchAuthTab(tab) {
+  document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+  document.getElementById('signupTab').classList.toggle('active', tab === 'signup');
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+}
+function doLogin() { showToast('Login successful! Welcome back.', 'success'); setTimeout(() => showPage('dashboard'), 500); }
+function doSignup() { showToast('Account created! Please check your email.', 'success'); setTimeout(() => switchAuthTab('login'), 1000); }
+
+// ── STUDENT DASHBOARD ──
+function showDashSection(s) {
+  currentDashSection = s;
+  document.querySelectorAll('#page-dashboard .sidebar-nav a').forEach(a => a.classList.remove('active'));
+  renderDash(s);
+}
+
+function renderDash(section) {
+  const c = document.getElementById('dashContent');
+  if (section === 'overview') {
+    c.innerHTML = `
+      <h2 class="dash-title">Good Morning, Amir 👋</h2>
+      <p class="dash-subtitle">Here's your library activity at a glance</p>
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-icon" style="background:#dbeafe;">📚</div><div class="metric-num">3</div><div class="metric-label">Books Borrowed</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#d1fae5;">✅</div><div class="metric-num">12</div><div class="metric-label">Books Returned</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#fef3c7;">⏰</div><div class="metric-num">2</div><div class="metric-label">Due This Week</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#fee2e2;">💰</div><div class="metric-num">₹20</div><div class="metric-label">Pending Fine</div></div>
+      </div>
+      <div class="dash-section">
+        <h3>Currently Borrowed</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Book</th><th>Issued On</th><th>Due Date</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Introduction to Algorithms</td><td>Jan 10</td><td>Jan 24</td><td><span class="badge badge-warning">Due Soon</span></td></tr>
+            <tr><td>A Brief History of Time</td><td>Jan 12</td><td>Jan 26</td><td><span class="badge badge-success">On Time</span></td></tr>
+            <tr><td>The Great Gatsby</td><td>Jan 5</td><td>Jan 19</td><td><span class="badge badge-danger">Overdue</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="dash-section">
+        <h3>Reading Progress</h3>
+        <div class="metric-card" style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;"><span>Monthly Goal</span><span style="font-weight:600;">3/5 books</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;"><span>Annual Reading</span><span style="font-weight:600;">12/30 books</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--gold)"></div></div>
+          </div>
+        </div>
+      </div>`;
+  } else if (section === 'borrowed') {
+    c.innerHTML = `
+      <h2 class="dash-title">Borrowed Books</h2>
+      <p class="dash-subtitle">Books currently checked out under your account</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Introduction to Algorithms</td><td>Cormen et al.</td><td>10 Jan</td><td>24 Jan</td><td><span class="badge badge-warning">Due Soon</span></td><td><button class="btn-sm" onclick="showToast('Renewal requested!','success')">Renew</button></td></tr>
+          <tr><td>2</td><td>A Brief History of Time</td><td>Stephen Hawking</td><td>12 Jan</td><td>26 Jan</td><td><span class="badge badge-success">On Time</span></td><td><button class="btn-sm" onclick="showToast('Renewal requested!','success')">Renew</button></td></tr>
+          <tr><td>3</td><td>The Great Gatsby</td><td>F. Scott Fitzgerald</td><td>5 Jan</td><td>19 Jan</td><td><span class="badge badge-danger">Overdue</span></td><td><button class="btn-sm primary" onclick="showToast('Please return this book','warning')">Return</button></td></tr>
+        </tbody>
+      </table></div>`;
+  } else if (section === 'fines') {
+    c.innerHTML = `
+      <h2 class="dash-title">Fine Status</h2>
+      <p class="dash-subtitle">Outstanding fines and payment history</p>
+      <div class="metric-grid">
+        <div class="metric-card" style="border-left:3px solid var(--danger)"><div class="metric-num" style="color:var(--danger)">₹20</div><div class="metric-label">Pending Fine</div></div>
+        <div class="metric-card" style="border-left:3px solid var(--success)"><div class="metric-num" style="color:var(--success)">₹40</div><div class="metric-label">Total Paid (All Time)</div></div>
+      </div>
+      <div class="dash-section">
+        <h3>Fine Details</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Book</th><th>Overdue Days</th><th>Rate</th><th>Amount</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>The Great Gatsby</td><td>4 days</td><td>₹5/day</td><td>₹20</td><td><span class="badge badge-danger">Unpaid</span></td></tr>
+          </tbody>
+        </table></div>
+        <div style="margin-top:1rem;text-align:right;">
+          <button class="btn-sm primary" onclick="showToast('Redirecting to payment gateway…','success')">💳 Pay ₹20 Now</button>
+        </div>
+      </div>`;
+  } else if (section === 'request') {
+    c.innerHTML = `
+      <h2 class="dash-title">Request a Book</h2>
+      <p class="dash-subtitle">Can't find what you need? Submit a book request to our librarians</p>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:2rem;max-width:540px;">
+        <div class="form-group"><label>Book Title</label><input type="text" placeholder="Enter the full title"></div>
+        <div class="form-group"><label>Author</label><input type="text" placeholder="Author name (if known)"></div>
+        <div class="form-group"><label>ISBN / Publisher</label><input type="text" placeholder="Optional but helpful"></div>
+        <div class="form-group"><label>Reason for Request</label>
+          <select><option>Course Requirement</option><option>Personal Research</option><option>Project Work</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label>Additional Notes</label><textarea placeholder="Any other details…" style="height:90px;resize:vertical;"></textarea></div>
+        <button class="btn-full" onclick="showToast('Book request submitted! We will review it within 2-3 days.','success')">Submit Request →</button>
+      </div>`;
+  } else if (section === 'history') {
+    c.innerHTML = `
+      <h2 class="dash-title">Borrow History</h2>
+      <p class="dash-subtitle">All books you have borrowed in the past</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Title</th><th>Author</th><th>Borrowed</th><th>Returned</th><th>Fine Paid</th></tr></thead>
+        <tbody>
+          <tr><td>Clean Code</td><td>Robert C. Martin</td><td>1 Nov</td><td>15 Nov</td><td><span class="badge badge-success">None</span></td></tr>
+          <tr><td>1984</td><td>George Orwell</td><td>10 Oct</td><td>25 Oct</td><td><span class="badge badge-success">None</span></td></tr>
+          <tr><td>Sapiens</td><td>Yuval Noah Harari</td><td>5 Sep</td><td>22 Sep</td><td><span class="badge badge-danger">₹10</span></td></tr>
+          <tr><td>The Alchemist</td><td>Paulo Coelho</td><td>1 Aug</td><td>10 Aug</td><td><span class="badge badge-success">None</span></td></tr>
+        </tbody>
+      </table></div>`;
+  } else if (section === 'wishlist') {
+    c.innerHTML = `
+      <h2 class="dash-title">My Wishlist</h2>
+      <p class="dash-subtitle">Books you have saved for later</p>
+      <div class="catalog-grid" style="margin-top:1rem;">
+        ${booksData.slice(6,10).map(b => bookCardHTML(b)).join('')}
+      </div>`;
+  }
+}
+
+// ── ADMIN DASHBOARD ──
+function showAdminSection(s) {
+  currentAdminSection = s;
+  document.querySelectorAll('#page-admin .sidebar-nav a').forEach(a => a.classList.remove('active'));
+  renderAdmin(s);
+}
+
+function renderAdmin(section) {
+  const c = document.getElementById('adminContent');
+  if (section === 'overview') {
+    c.innerHTML = `
+      <h2 class="dash-title">Admin Dashboard</h2>
+      <p class="dash-subtitle">Library system overview — as of today</p>
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-icon" style="background:#dbeafe;">📚</div><div class="metric-num">12,450</div><div class="metric-label">Total Books</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#d1fae5;">👥</div><div class="metric-num">3,218</div><div class="metric-label">Registered Students</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#fef3c7;">📋</div><div class="metric-num">842</div><div class="metric-label">Active Borrows</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#fee2e2;">⚠️</div><div class="metric-num">34</div><div class="metric-label">Overdue Books</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#ede9fe;">💰</div><div class="metric-num">₹4,320</div><div class="metric-label">Fines Collected</div></div>
+        <div class="metric-card"><div class="metric-icon" style="background:#d1fae5;">📩</div><div class="metric-num">18</div><div class="metric-label">Book Requests</div></div>
+      </div>
+      <div class="admin-grid">
+        <div class="admin-action-card" onclick="showAdminSection('books')"><div class="admin-action-icon">📚</div><h4>Manage Books</h4><p>Add, edit or remove books from catalog</p></div>
+        <div class="admin-action-card" onclick="showAdminSection('users')"><div class="admin-action-icon">👥</div><h4>Manage Users</h4><p>View and manage student accounts</p></div>
+        <div class="admin-action-card" onclick="showAdminSection('issued')"><div class="admin-action-icon">📋</div><h4>Issued Books</h4><p>Track all currently issued books</p></div>
+        <div class="admin-action-card" onclick="showAdminSection('reports')"><div class="admin-action-icon">📈</div><h4>Reports</h4><p>View statistics and analytics</p></div>
+      </div>`;
+  } else if (section === 'books') {
+    c.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;">
+        <div><h2 class="dash-title" style="margin-bottom:4px;">Manage Books</h2><p style="color:var(--text2);font-size:0.875rem;">Add, edit or remove books from the catalog</p></div>
+        <button class="btn-sm primary" onclick="openModal('addBookModal')">+ Add New Book</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Copies</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${booksData.slice(0,10).map(b => `<tr>
+            <td style="font-weight:500;">${b.emoji} ${b.title}</td>
+            <td>${b.author}</td>
+            <td><span class="badge badge-info">${b.cat}</span></td>
+            <td>${b.copies}</td>
+            <td><span class="badge ${b.available?'badge-success':'badge-danger'}">${b.available?'Available':'Issued'}</span></td>
+            <td><button class="btn-sm" onclick="showToast('Edit feature opens here','warning')" style="margin-right:6px;">Edit</button><button class="btn-sm" style="color:var(--danger);border-color:var(--danger);" onclick="showToast('Book deleted!','success')">Delete</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`;
+  } else if (section === 'users') {
+    c.innerHTML = `
+      <h2 class="dash-title">Manage Users</h2>
+      <p class="dash-subtitle" style="margin-bottom:1.5rem;">View and manage all registered library members</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Student ID</th><th>Name</th><th>Department</th><th>Books Borrowed</th><th>Fine</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>STU2024001</td><td>Amir Shah</td><td>Computer Science</td><td>3</td><td>₹20</td><td><span class="badge badge-success">Active</span></td><td><button class="btn-sm">View</button></td></tr>
+          <tr><td>STU2024002</td><td>Priya Sharma</td><td>Engineering</td><td>1</td><td>₹0</td><td><span class="badge badge-success">Active</span></td><td><button class="btn-sm">View</button></td></tr>
+          <tr><td>STU2024003</td><td>Rohit Verma</td><td>Arts</td><td>0</td><td>₹50</td><td><span class="badge badge-danger">Suspended</span></td><td><button class="btn-sm">View</button></td></tr>
+          <tr><td>STU2024004</td><td>Fatima Khan</td><td>Natural Sciences</td><td>2</td><td>₹0</td><td><span class="badge badge-success">Active</span></td><td><button class="btn-sm">View</button></td></tr>
+        </tbody>
+      </table></div>`;
+  } else if (section === 'issued') {
+    c.innerHTML = `
+      <h2 class="dash-title">Issued Books</h2>
+      <p class="dash-subtitle" style="margin-bottom:1.5rem;">All books currently issued to students</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Book</th><th>Student</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Introduction to Algorithms</td><td>Amir Shah</td><td>10 Jan</td><td>24 Jan</td><td><span class="badge badge-warning">Due Soon</span></td><td><button class="btn-sm primary" onclick="showToast('Book marked as returned!','success')">Mark Returned</button></td></tr>
+          <tr><td>The Great Gatsby</td><td>Amir Shah</td><td>5 Jan</td><td>19 Jan</td><td><span class="badge badge-danger">Overdue</span></td><td><button class="btn-sm primary" onclick="showToast('Fine issued!','warning')">Issue Fine</button></td></tr>
+          <tr><td>Clean Code</td><td>Priya Sharma</td><td>15 Jan</td><td>29 Jan</td><td><span class="badge badge-success">On Time</span></td><td><button class="btn-sm primary" onclick="showToast('Book marked as returned!','success')">Mark Returned</button></td></tr>
+          <tr><td>Linear Algebra</td><td>Fatima Khan</td><td>8 Jan</td><td>22 Jan</td><td><span class="badge badge-warning">Due Soon</span></td><td><button class="btn-sm primary" onclick="showToast('Book marked as returned!','success')">Mark Returned</button></td></tr>
+        </tbody>
+      </table></div>`;
+  } else if (section === 'reports') {
+    c.innerHTML = `
+      <h2 class="dash-title">Reports & Analytics</h2>
+      <p class="dash-subtitle" style="margin-bottom:1.5rem;">Library usage statistics and trends</p>
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-num">842</div><div class="metric-label">Active Borrows This Month</div><div class="progress-bar" style="margin-top:12px;"><div class="progress-fill" style="width:70%"></div></div></div>
+        <div class="metric-card"><div class="metric-num">98%</div><div class="metric-label">Return Rate</div><div class="progress-bar" style="margin-top:12px;"><div class="progress-fill" style="width:98%;background:var(--success)"></div></div></div>
+        <div class="metric-card"><div class="metric-num">₹4,320</div><div class="metric-label">Fines This Month</div><div class="progress-bar" style="margin-top:12px;"><div class="progress-fill" style="width:45%;background:var(--warning)"></div></div></div>
+        <div class="metric-card"><div class="metric-num">18</div><div class="metric-label">Pending Requests</div><div class="progress-bar" style="margin-top:12px;"><div class="progress-fill" style="width:20%;background:var(--gold)"></div></div></div>
+      </div>
+      <div class="dash-section">
+        <h3>Most Borrowed Categories</h3>
+        <div class="metric-card">
+          ${[['Technology','65%','var(--accent)'],['Science','52%','var(--success)'],['Literature','48%','var(--gold)'],['History','35%','var(--danger)'],['Mathematics','28%','#7c3aed)']].map(([cat,pct,clr]) => `
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;"><span>${cat}</span><span style="font-weight:600;">${pct}</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:${pct};background:${clr}"></div></div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="btn-sm primary" onclick="showToast('Report exported as PDF!','success')">📥 Export Full Report</button>
+      </div>`;
+  }
+}
+
+// ── ADD BOOK ──
+function addBook() {
+  const title = document.getElementById('addTitle').value.trim();
+  if (!title) { showToast('Please enter a book title','warning'); return; }
+  showToast(`"${title}" added to catalog successfully!`, 'success');
+  closeModal('addBookModal');
+}
+
+// ── CONTACT ──
+function sendContact() { showToast('Message sent! We will reply within 24 hours.', 'success'); }
+
+// ── INIT ──
+renderFeatured();
+renderCatalog();
+renderDash('overview');
+renderAdmin('overview');
+
+// Close mobile menu on outside click
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('mobileMenu');
+  const ham = document.getElementById('hamburger');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !ham.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
